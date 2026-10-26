@@ -1,0 +1,125 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NOCTURNE BOOKS · Админ-панель</title><style>
+:root{font-family:Inter,system-ui,-apple-system,Arial,sans-serif;color:#24354d;background:#f6f9fd}*{box-sizing:border-box}body{margin:0}header{background:linear-gradient(120deg,#173052,#466c99);color:white;padding:20px 18px}header h1{font-size:21px;margin:0 0 5px}header small{opacity:.85}.wrap{max-width:1050px;margin:20px auto;padding:0 14px}.panel{background:white;border:1px solid #e0e8f1;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 5px 20px #1730520b}h2{font-size:17px;margin:0 0 15px}label{display:block;font-size:13px;font-weight:650;margin:12px 0 6px}input,textarea,select{font:inherit;width:100%;padding:11px;border:1px solid #cbd7e6;border-radius:9px;background:white;color:#24354d}textarea{min-height:100px;resize:vertical}button{background:#709bd0;color:white;border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}.secondary{background:#e9f0f9;color:#173052}.danger{background:#a73550}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.row>*{flex:1}.row button{flex:0 0 auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}.hide{display:none!important}.muted{color:#73859d;font-size:13px}.status{white-space:pre-wrap;margin:10px 0;color:#2e648f}.error{color:#b5324b}.check{display:flex;align-items:center;gap:9px;font-size:14px}.check input{width:auto}.books{max-height:430px;overflow:auto;border:1px solid #e2eaf3;border-radius:10px}.book{display:block;width:100%;text-align:left;padding:12px;background:white;color:#173052;border:0;border-bottom:1px solid #edf1f7;border-radius:0}.book:hover,.book.active{background:#eaf2fd}.book small{display:block;color:#73859d;margin-top:4px}.cover{max-width:130px;max-height:190px;border-radius:8px;margin-top:10px}.pill{font-size:12px;background:#eaf2fd;border-radius:20px;padding:4px 9px}.tip{background:#f1f6fc;padding:12px;border-radius:10px;font-size:13px;line-height:1.5}@media(max-width:700px){.grid{grid-template-columns:1fr}.row{display:block}.row button{margin-top:8px}.wrap{margin-top:12px}}
+
+.art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(105px,1fr));gap:12px;margin-top:15px}.art-item{border:1px solid #dce5f0;border-radius:12px;padding:8px;background:#f8fafd}.art-item img{width:100%;aspect-ratio:1/1;height:auto;object-fit:cover;border-radius:7px}.art-item button{padding:7px 9px;font-size:12px}.art-controls{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.art-controls button{flex:1}.file-actions{display:flex;gap:8px;flex-wrap:wrap}.file-actions button{font-size:12px;padding:8px 10px}.art-count{font-size:13px;color:#73859d}
+</style></head><body><header><h1>NOCTURNE BOOKS</h1><small>Управление каталогом · отдельная панель</small></header><main class="wrap"><section class="panel"><h2>BOOKMATCH ♡</h2><p>Отдельный редактор анкет книжных персонажей.</p><a href="bookmatch-admin.html" style="color:#31577f;font-weight:700">Открыть редактор BOOKMATCH →</a></section>
+<section class="panel" id="loginPanel"><h2>Вход администратора</h2><p class="muted">Войди с теми же email и паролем Supabase, что используются для новостей команды.</p><label>Email</label><input id="email" type="email" autocomplete="username"><label>Пароль</label><input id="password" type="password" autocomplete="current-password"><p><button id="loginBtn">Войти</button></p><div id="loginStatus" class="status"></div></section>
+<div id="app" class="hide"><section class="panel"><div class="row"><div><h2 style="margin:0">Каталог</h2><span id="counter" class="muted"></span></div><button class="secondary" id="newBtn">+ Новая книга</button><button class="secondary" id="logoutBtn">Выйти</button></div><label>Поиск по книгам и авторам</label><input id="search" placeholder="Название, автор, серия..."><div id="bookList" class="books" style="margin-top:12px"></div></section>
+<section class="panel"><h2 id="editorTitle">Редактирование книги</h2><div class="grid"><div><label>Название *</label><input id="title" required></div><div><label>Автор *</label><input id="author" required></div><div><label>Серия</label><select id="series"></select></div><div><label>Номер в серии</label><input id="series_number" type="text" inputmode="decimal" placeholder="Например: 0,5 / 1,5 / 2,5"></div><div><label>Статус</label><select id="status"><option>В процессе</option><option>На редактуре</option><option>Анонс</option><option>Опубликована</option></select></div><div><label>Дата анонса (текст)</label><input id="announcement_date" placeholder="НОЯБРЬ 2026"></div><div><label>Страниц</label><input id="pages" type="number" min="1"></div><div><label>Глав</label><input id="chapters" type="number" min="1"></div><div><label>Порядок сортировки</label><input id="sort_order" type="number" value="0"></div><div><label>Slug (для новой книги — автоматически)</label><input id="slug" readonly></div></div><label>Аннотация</label><textarea id="annotation" rows="9"></textarea><label>Тропы (каждый с новой строки)</label><textarea id="tropes" rows="6" placeholder="Хоккейный роман&#10;От друзей к влюблённым"></textarea><div class="grid"><label class="check"><input id="is_published" type="checkbox">Показывать карточку в каталоге</label><label class="check"><input id="show_in_new" type="checkbox">Показывать в новинках</label><label class="check"><input id="show_in_announcements" type="checkbox">Показывать в анонсах</label><label class="check"><input id="is_featured" type="checkbox">Избранная книга</label></div><p><button id="saveBtn">Сохранить карточку</button></p><div id="editStatus" class="status"></div></section>
+<section class="panel"><h2>Файлы книги</h2><p class="tip">Выбери книгу и загрузи файл с любым названием — в том числе русским. Панель сама создаст безопасное имя на основе slug книги и сохранит путь в её карточке. Для файлов используется приватный bucket <b>book-files</b>.</p><div class="grid"><div><label>Обложка (JPG, PNG, WEBP)</label><input id="coverFile" type="file" accept="image/jpeg,image/png,image/webp"><p><button id="uploadCover">Загрузить обложку</button></p><div id="coverInfo" class="muted"></div><img id="coverPreview" class="cover hide" alt="Обложка"></div><div><label>Книга (EPUB)</label><input id="epubFile" type="file" accept=".epub,application/epub+zip"><p><button id="uploadEpub">Загрузить EPUB</button></p><div id="epubInfo" class="muted"></div></div></div><div class="file-actions"><button class="secondary" id="removeCover" type="button">Отвязать обложку</button><button class="secondary" id="removeEpub" type="button">Отвязать EPUB</button></div><p class="muted">Отвязка убирает файл из карточки, но не удаляет его из Storage. Новая загрузка заменяет файл с тем же именем.</p><div id="uploadStatus" class="status"></div></section>
+<section class="panel"><h2>Галерея иллюстраций</h2><p class="tip">Выбери книгу, затем добавь несколько изображений. Названия файлов могут быть на русском. Стрелки меняют порядок, кнопка «Удалить» удаляет изображение из галереи и хранилища.</p><label>Изображения (JPG, PNG, WEBP)</label><input id="artFiles" type="file" accept="image/jpeg,image/png,image/webp" multiple><p><button id="uploadArts">Добавить в галерею</button></p><div id="artsStatus" class="status"></div><div id="artCount" class="art-count"></div><div id="artGrid" class="art-grid"></div></section>
+<section class="panel"><h2>Серии</h2><div class="row"><input id="newSeries" placeholder="Название новой серии"><button id="addSeries">Добавить серию</button></div><p class="muted">Книги вне серий оставляй с пустым полем «Серия».</p><div id="seriesStatus" class="status"></div></section>
+</div></main><script type="module">
+import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const URL='https://fuogkvbinzpprvksxbql.supabase.co', KEY='sb_publishable_YVNtl0-eeUuWHF4GahBGxA_fz0dfk_T';
+const db=createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+const $=id=>document.getElementById(id), fields=['slug','title','author','series_id','series_number','annotation','tropes','pages','chapters','status','is_published','show_in_new','show_in_announcements','is_featured','announcement_date','sort_order'];
+let books=[],series=[],current=null,verified=false,arts=[],artRequest=0;
+function notice(id,msg,err=false){$(id).textContent=msg;$(id).className='status'+(err?' error':'')}
+function safeSlug(s){return s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,60)}
+function idSlug(){return 'book-'+crypto.randomUUID().slice(0,12)}
+function escapeText(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function authCheck(){const {data:{user},error}=await db.auth.getUser();if(error||!user){verified=false;$('app').classList.add('hide');$('loginPanel').classList.remove('hide');return}const {data,error:adminErr}=await db.from('team_admins').select('user_id').eq('user_id',user.id).maybeSingle();if(adminErr||!data){verified=false;notice('loginStatus','Этот аккаунт не найден в team_admins. '+(adminErr?.message||''),true);await db.auth.signOut();return}verified=true;$('loginPanel').classList.add('hide');$('app').classList.remove('hide');await reload()}
+$('loginBtn').onclick=async()=>{notice('loginStatus','Входим...');const {error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)return notice('loginStatus',error.message,true);$('password').value='';await authCheck()};
+$('logoutBtn').onclick=async()=>{await db.auth.signOut();verified=false;$('app').classList.add('hide');$('loginPanel').classList.remove('hide')};
+async function reload(){const [b,s]=await Promise.all([db.from('library_books').select('*').order('sort_order',{ascending:true}),db.from('book_series').select('id,name').order('name')]);if(b.error||s.error){notice('editStatus',(b.error||s.error).message,true);return}books=b.data||[];series=s.data||[];renderSeries();renderList();if(current?.id){const updated=books.find(x=>x.id===current.id);if(updated)edit(updated)}else if(books.length)edit(books[0]);$('counter').textContent=`${books.length} карточек`}
+function renderSeries(){const chosen=$('series').value;$('series').innerHTML='<option value="">Вне серий</option>'+series.map(x=>`<option value="${escapeText(x.id)}">${escapeText(x.name)}</option>`).join('');$('series').value=chosen}
+function renderList(){const q=$('search').value.trim().toLowerCase();const matched=books.filter(b=>([b.title,b.author,series.find(s=>s.id===b.series_id)?.name].join(' ')).toLowerCase().includes(q));$('bookList').innerHTML=matched.map(b=>`<button class="book ${current?.id===b.id?'active':''}" data-id="${escapeText(b.id)}">${escapeText(b.title)}<small>${escapeText(b.author)} · ${escapeText(b.status)} ${b.is_published?'· видна':'· черновик'}</small></button>`).join('')||'<p class="muted" style="padding:12px">Ничего не найдено</p>';$('bookList').querySelectorAll('[data-id]').forEach(el=>el.onclick=()=>edit(books.find(b=>b.id===el.dataset.id)))}
+$('search').oninput=renderList;
+function edit(book){current=book;$('editorTitle').textContent=book?.id?'Редактирование: '+book.title:'Новая книга';for(const f of fields){const el=$(f);if(!el)continue;const val=book?.[f];if(el.type==='checkbox')el.checked=!!val;else if(f==='tropes')el.value=Array.isArray(val)?val.join('\n'):'';else el.value=val??''}if(!book){$('slug').value=idSlug();$('status').value='В процессе';$('sort_order').value=books.length;$('is_published').checked=false}renderList();$('coverInfo').textContent=book?.cover_path?'Файл: '+book.cover_path:'Обложка пока не привязана';$('epubInfo').textContent=book?.epub_path?'Файл: '+book.epub_path:'EPUB пока не привязан';$('coverPreview').classList.add('hide');$('coverPreview').removeAttribute('src');notice('editStatus','');notice('uploadStatus','');if(book?.cover_path)showCover(book.cover_path);loadArts()}
+$('newBtn').onclick=()=>edit(null);
+function numberOrNull(id){const v=$(id).value.trim().replace(',', '.');return v===''?null:Number(v)}
+async function saveBook(){if(!verified)return;const title=$('title').value.trim(),author=$('author').value.trim();if(!title||!author)return notice('editStatus','Заполни название и автора.',true);const seriesNum=numberOrNull('series_number');if($('series_number').value.trim()!==''&&(!Number.isFinite(seriesNum)||seriesNum<0))return notice('editStatus','Номер в серии должен быть неотрицательным числом, например 0,5 или 2,5.',true);const selectedStatus=$('status').value; if(selectedStatus==='Опубликована'){$('show_in_announcements').checked=false;} if(selectedStatus==='Анонс'){$('show_in_announcements').checked=true;$('show_in_new').checked=false;} const payload={slug:$('slug').value,title,author,series_id:$('series').value||null,series_number:seriesNum,annotation:$('annotation').value,tropes:$('tropes').value.split('\n').map(x=>x.trim()).filter(Boolean),pages:numberOrNull('pages'),chapters:numberOrNull('chapters'),status:$('status').value,announcement_date:$('announcement_date').value.trim()||null,sort_order:Number($('sort_order').value)||0,is_published:$('is_published').checked,show_in_new:$('show_in_new').checked,show_in_announcements:$('show_in_announcements').checked,is_featured:$('is_featured').checked,updated_at:new Date().toISOString()};$('saveBtn').disabled=true;notice('editStatus','Сохраняем...');let query=current?.id?db.from('library_books').update(payload).eq('id',current.id):db.from('library_books').insert(payload);const {data,error}=await query.select().single();$('saveBtn').disabled=false;if(error)return notice('editStatus',error.message,true);current=data;notice('editStatus','Карточка сохранена ✓');await reload();edit(data);notice('editStatus','Карточка сохранена ✓')}
+$('status').addEventListener('change',()=>{if($('status').value==='Опубликована')$('show_in_announcements').checked=false;else if($('status').value==='Анонс'){$('show_in_announcements').checked=true;$('show_in_new').checked=false;}});
+$('saveBtn').onclick=saveBook;
+async function showCover(path){const {data,error}=await db.storage.from('book-files').createSignedUrl(path,300);if(error||!data?.signedUrl)return; if(current?.cover_path!==path)return;$('coverPreview').src=data.signedUrl;$('coverPreview').classList.remove('hide')}
+async function upload(kind){if(!verified||!current?.id)return notice('uploadStatus','Сначала выбери и сохрани карточку книги.',true);const file=$(kind==='cover'?'coverFile':'epubFile').files[0];if(!file)return notice('uploadStatus','Сначала выбери файл.',true);const isCover=kind==='cover';const ext=file.name.split('.').pop().toLowerCase();if(isCover&&!['jpg','jpeg','png','webp'].includes(ext))return notice('uploadStatus','Нужен JPG, PNG или WEBP.',true);if(!isCover&&ext!=='epub')return notice('uploadStatus','Нужен файл с расширением .epub.',true);if(file.size>50*1024*1024)return notice('uploadStatus','Файл больше 50 МБ — лимит хранилища.',true);const path=(isCover?'covers/':'epubs/')+current.slug+'.'+(isCover?ext:'epub');const btn=$(isCover?'uploadCover':'uploadEpub');btn.disabled=true;notice('uploadStatus','Загружаем '+file.name+'...');const {error}=await db.storage.from('book-files').upload(path,file,{upsert:true,contentType:isCover?file.type||'image/jpeg':'application/epub+zip'});if(error){btn.disabled=false;return notice('uploadStatus',error.message,true)}const field=isCover?'cover_path':'epub_path';const {data,error:updateErr}=await db.from('library_books').update({[field]:path,updated_at:new Date().toISOString()}).eq('id',current.id).select().single();btn.disabled=false;if(updateErr)return notice('uploadStatus','Файл загружен, но не привязан: '+updateErr.message,true);current=data;notice('uploadStatus','Готово! Файл загружен и привязан к книге ✓');$(isCover?'coverInfo':'epubInfo').textContent='Файл: '+path;if(isCover)showCover(path);$(isCover?'coverFile':'epubFile').value='';await reload()}
+$('uploadCover').onclick=()=>upload('cover');$('uploadEpub').onclick=()=>upload('epub');
+
+async function unlinkFile(kind){
+ if(!verified||!current?.id)return;
+ const field=kind==='cover'?'cover_path':'epub_path';
+ if(!current[field])return notice('uploadStatus','Файл уже не привязан.');
+ if(!confirm('Убрать файл из карточки? Файл в Storage останется.'))return;
+ const id=current.id;
+ const {data,error}=await db.from('library_books').update({[field]:null,updated_at:new Date().toISOString()}).eq('id',id).select().single();
+ if(error)return notice('uploadStatus',error.message,true);
+ current=data;
+ if(kind==='cover'){$('coverInfo').textContent='Обложка пока не привязана';$('coverPreview').classList.add('hide');$('coverPreview').removeAttribute('src')}
+ else $('epubInfo').textContent='EPUB пока не привязан';
+ notice('uploadStatus','Файл отвязан от карточки ✓');await reload();
+}
+$('removeCover').onclick=()=>unlinkFile('cover');$('removeEpub').onclick=()=>unlinkFile('epub');
+async function loadArts(){
+ const request=++artRequest,bookId=current?.id;
+ arts=[];$('artGrid').replaceChildren();$('artCount').textContent=bookId?'Загружаем иллюстрации...':'Сначала сохрани книгу';
+ notice('artsStatus','');
+ if(!bookId)return;
+ const {data,error}=await db.from('book_arts').select('*').eq('book_id',bookId).order('sort_order',{ascending:true}).order('created_at',{ascending:true});
+ if(request!==artRequest||current?.id!==bookId)return;
+ if(error){$('artCount').textContent='';return notice('artsStatus','Не удалось открыть галерею: '+error.message,true)}
+ arts=data||[];$('artCount').textContent=`Иллюстраций: ${arts.length}`;
+ for(let i=0;i<arts.length;i++){
+   const a=arts[i],tile=document.createElement('div');tile.className='art-item';
+   const img=document.createElement('img');img.alt='Иллюстрация '+(i+1);img.loading='lazy';
+   const {data:signed,error:e}=await db.storage.from('book-files').createSignedUrl(a.storage_path,600);
+   if(request!==artRequest||current?.id!==bookId)return;
+   if(!e&&signed?.signedUrl)img.src=signed.signedUrl;
+   const controls=document.createElement('div');controls.className='art-controls';
+   for(const [label,action,disabled] of [['←',()=>moveArt(i,-1),i===0],['→',()=>moveArt(i,1),i===arts.length-1],['Удалить',()=>deleteArt(a),false]]){
+     const btn=document.createElement('button');btn.textContent=label;btn.className=label==='Удалить'?'danger':'secondary';btn.disabled=disabled;btn.onclick=action;controls.append(btn)
+   }
+   tile.append(img,controls);$('artGrid').append(tile)
+ }
+}
+async function uploadArts(){
+ if(!verified||!current?.id)return notice('artsStatus','Сначала выбери и сохрани книгу.',true);
+ const files=Array.from($('artFiles').files),bookId=current.id,slug=current.slug;
+ if(!files.length)return notice('artsStatus','Выбери изображения.',true);
+ const btn=$('uploadArts');btn.disabled=true;let done=0;
+ try{
+  for(const file of files){
+   if(current?.id!==bookId)throw Error('Во время загрузки выбрана другая книга.');
+   const ext=file.name.split('.').pop().toLowerCase();
+   if(!['jpg','jpeg','png','webp'].includes(ext))throw Error('Неподдерживаемый формат: '+file.name);
+   if(file.size>50*1024*1024)throw Error('Файл больше 50 МБ: '+file.name);
+   notice('artsStatus',`Загружаем ${done+1} из ${files.length}...`);
+   const path=`arts/${slug}/${crypto.randomUUID()}.${ext}`;
+   const {error:upErr}=await db.storage.from('book-files').upload(path,file,{upsert:false,contentType:file.type||'image/jpeg'});
+   if(upErr)throw Error(upErr.message);
+   const {error:dbErr}=await db.from('book_arts').insert({book_id:bookId,storage_path:path,sort_order:arts.length+done});
+   if(dbErr){await db.storage.from('book-files').remove([path]);throw Error(dbErr.message)}
+   done++;
+  }
+  $('artFiles').value='';await loadArts();notice('artsStatus',`Загружено иллюстраций: ${done} ✓`)
+ }catch(e){notice('artsStatus',`Загружено ${done} из ${files.length}. Ошибка: ${e.message}`,true);await loadArts()}
+ finally{btn.disabled=false}
+}
+$('uploadArts').onclick=uploadArts;
+async function moveArt(index,delta){
+ if(!verified||!current?.id)return;
+ const other=index+delta;if(other<0||other>=arts.length)return;
+ const ordered=[...arts];[ordered[index],ordered[other]]=[ordered[other],ordered[index]];
+ notice('artsStatus','Сохраняем порядок...');
+ // Use distinct sort values to avoid ambiguous ties, and refresh after both writes.
+ for(let i=0;i<ordered.length;i++){
+  const {error}=await db.from('book_arts').update({sort_order:i}).eq('id',ordered[i].id);
+  if(error){notice('artsStatus',error.message,true);return}
+ }
+ await loadArts();notice('artsStatus','Порядок сохранён ✓')
+}
+async function deleteArt(a){
+ if(!verified||!current?.id||a.book_id!==current.id)return;
+ if(!confirm('Удалить иллюстрацию из галереи и Storage? Это действие нельзя отменить.'))return;
+ // Delete storage first: if it fails, preserve the database record.
+ notice('artsStatus','Удаляем иллюстрацию...');
+ const {error:storageError}=await db.storage.from('book-files').remove([a.storage_path]);
+ if(storageError)return notice('artsStatus',storageError.message,true);
+ const {error}=await db.from('book_arts').delete().eq('id',a.id).eq('book_id',current.id);
+ if(error)return notice('artsStatus','Файл удалён из Storage, но запись осталась: '+error.message,true);
+ await loadArts();notice('artsStatus','Иллюстрация удалена ✓')
+}
+
+$('addSeries').onclick=async()=>{const name=$('newSeries').value.trim();if(!name)return;const {error}=await db.from('book_series').insert({name});if(error)return notice('seriesStatus',error.message,true);$('newSeries').value='';notice('seriesStatus','Серия добавлена ✓');await reload()};
+authCheck().catch(e=>notice('loginStatus',e.message,true));
+</script></body></html>
